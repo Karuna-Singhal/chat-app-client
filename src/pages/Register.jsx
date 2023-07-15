@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Logo from "../assets/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { registerRoute } from "../utils/APIRoutes";
 
 export default function Register() {
   const [values, setValues] = useState({
@@ -12,9 +14,17 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    handleValidation();
+    if (handleValidation()) {
+      const { username, email, password, confirmPassword } = values;
+      const { data } = await axios.post(registerRoute, {
+        username,
+        email,
+        password,
+        confirmPassword,
+      });
+    }
   }
 
   const toastOption = {
@@ -28,9 +38,22 @@ export default function Register() {
   function handleValidation() {
     const { username, email, password, confirmPassword } = values;
     if (password !== confirmPassword) {
-      toast.error("password and confirm password should be same.", toastOption);
+      toast.error("Password and confirm password should be same.", toastOption);
+      return false;
+    } else if (password.length < 8) {
+      toast.error(
+        "Password should be greater than or equal to 8 characters",
+        toastOption
+      );
+      return false;
+    } else if (username.length < 3) {
+      toast.error("Username should be greater than 3 characters", toastOption);
+      return false;
+    } else if (email === "") {
+      toast.error("Email is required", toastOption);
       return false;
     }
+    return true;
   }
 
   function handleChange(event) {
@@ -43,7 +66,7 @@ export default function Register() {
         <form onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
             <img src={Logo} alt="logo" />
-            <h1>Snappy</h1>
+            <h1>Chat App</h1>
           </div>
           <input
             type="text"
