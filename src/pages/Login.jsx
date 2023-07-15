@@ -76,7 +76,7 @@ export default function Login() {
             name="password"
             onChange={(e) => handleChange(e)}
           />
-          <button type="submit">Login In</button>
+          <button type="submit">Login</button>
           <span>
             Don't have an account ? <Link to="/register">Register</Link>
           </span>
