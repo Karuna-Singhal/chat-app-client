@@ -10,7 +10,7 @@ import { avatars } from "../helper/avatar";
 export default function SetAvatar() {
   const navigate = useNavigate();
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-  console.log(selectedAvatar);
+
   const toastOption = {
     position: "bottom-right",
     autoClose: 8000,
@@ -33,7 +33,7 @@ export default function SetAvatar() {
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
       });
-      console.log(user);
+
       if (data.isSet) {
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
