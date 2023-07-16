@@ -1,23 +1,25 @@
 import React from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
+import ChatMessage from "./ChatMessage";
+import ChatInput from "./ChatInput";
 
 export default function ChatContainer({ currentChat }) {
+  const handleSendMsg = async (msg) => {};
   return (
     <Container>
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
             <img src={currentChat.avatarImage} alt="UserImage" />
-            <div className="username">
-              <h3>{currentChat.username}</h3>
-            </div>
+          </div>
+          <div className="username">
+            <h3>{currentChat.username}</h3>
           </div>
         </div>
         <Logout />
       </div>
-      <div className="chat-messages"></div>
-      <div className="chat-input"></div>
+      <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
 }
