@@ -15,6 +15,21 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+
+  const toastOption = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("chat-app-user")) {
+      navigate("/");
+    }
+  }, []);
+
   async function handleSubmit(event) {
     event.preventDefault();
     if (handleValidation()) {
@@ -33,14 +48,6 @@ export default function Register() {
       }
     }
   }
-
-  const toastOption = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
 
   function handleValidation() {
     const { username, email, password, confirmPassword } = values;
