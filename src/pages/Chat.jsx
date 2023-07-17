@@ -52,7 +52,10 @@ export default function Chat() {
           {currentChat === null ? (
             <Welcome currentUser={currentUser} />
           ) : (
-            <ChatContainer currentChat={currentChat} />
+            <ChatContainer
+              currentChat={currentChat}
+              currentUser={currentUser}
+            />
           )}
         </div>
       </Container>
