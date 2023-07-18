@@ -1,21 +1,36 @@
 import React, { useState } from "react";
-import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoMdSend } from "react-icons/io";
 import styled from "styled-components";
-import Picker from "emoji-picker-react";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "quill-emoji/dist/quill-emoji.css";
+import quillEmoji from "quill-emoji";
+
+Quill.register(
+  {
+    "formats/emoji": quillEmoji.EmojiBlot,
+    "modules/emoji-toolbar": quillEmoji.ToolbarEmoji,
+    "modules/emoji-textarea": quillEmoji.TextAreaEmoji,
+    "modules/emoji-shortname": quillEmoji.ShortNameEmoji,
+  },
+  true
+);
+
+const modules = {
+  toolbar: [
+    ["bold", "italic", "strike", "link"],
+    [{ list: "bullet" }],
+    [{ list: "ordered" }],
+    [{ align: [] }],
+    ["blockquote", "code-block", "emoji"],
+  ],
+  "emoji-toolbar": true,
+  "emoji-textarea": false,
+  "emoji-shortname": true,
+};
 
 export default function ChatInput({ handleSendMsg }) {
   const [msg, setMsg] = useState("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const handleEmojiPickerhideShow = () => {
-    setShowEmojiPicker(!showEmojiPicker);
-  };
-
-  const handleEmojiClick = (event, emojiObject) => {
-    let message = msg;
-    message += emojiObject.emoji;
-    setMsg(message);
-  };
 
   const sendChat = (event) => {
     event.preventDefault();
@@ -27,20 +42,16 @@ export default function ChatInput({ handleSendMsg }) {
 
   return (
     <Container>
-      <div className="button-container">
-        <div className="emoji">
-          <BsEmojiSmileFill onClick={handleEmojiPickerhideShow} />
-          {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
-        </div>
-      </div>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
-        <input
-          type="text"
-          placeholder="type your message here"
-          onChange={(e) => setMsg(e.target.value)}
+      <form className="editor" onSubmit={(event) => sendChat(event)}>
+        <ReactQuill
+          theme="snow"
+          placeholder="Chat here ..."
           value={msg}
+          onChange={setMsg}
+          className="editor-input"
+          modules={modules}
         />
-        <button type="submit">
+        <button className="button">
           <IoMdSend />
         </button>
       </form>
@@ -49,96 +60,42 @@ export default function ChatInput({ handleSendMsg }) {
 }
 
 const Container = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 5% 95%;
-  background-color: #080420;
-  padding: 0 2rem;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-  .button-container {
-    display: flex;
-    align-items: center;
-    color: white;
-    gap: 1rem;
-    .emoji {
-      position: relative;
-      svg {
-        font-size: 1.5rem;
-        color: #ffff00c8;
-        cursor: pointer;
-      }
-      .emoji-picker-react {
-        position: absolute;
-        top: -350px;
-        background-color: #080420;
-        box-shadow: 0 5px 10px #9a86f3;
-        border-color: #9a86f3;
-        .emoji-scroll-wrapper::-webkit-scrollbar {
-          background-color: #080420;
-          width: 5px;
-          &-thumb {
-            background-color: #9a86f3;
-          }
-        }
-        .emoji-categories {
-          button {
-            filter: contrast(0);
-          }
-        }
-        .emoji-search {
-          background-color: transparent;
-          border-color: #9a86f3;
-        }
-        .emoji-group:before {
-          background-color: #080420;
-        }
-      }
-    }
-  }
-  .input-container {
+  display: flex;
+  
+  .editor {
+    position: relative;
+    height: 100%;
     width: 100%;
-    border-radius: 2rem;
     display: flex;
-    align-items: center;
-    gap: 2rem;
-    background-color: #ffffff34;
-    input {
-      width: 90%;
-      height: 60%;
-      background-color: transparent;
+    top:-50%;
+    .editor-input {
+      background-color: #080420;
       color: white;
-      border: none;
-      padding-left: 1rem;
-      font-size: 1.2rem;
-
-      &::selection {
-        background-color: #9a86f3;
-      }
-      &:focus {
-        outline: none;
+      height: 70%;
+      width: 100%;
+      placeholder{
+        color:#fff;
       }
     }
-    button {
-      padding: 0.3rem 2rem;
-      border-radius: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    
+    .button {
       background-color: #9a86f3;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 24px;
       border: none;
-      @media screen and (min-width: 720px) and (max-width: 1080px) {
-        padding: 0.3rem 1rem;
-        svg {
-          font-size: 1rem;
-        }
-      }
-      svg {
-        font-size: 2rem;
-        color: white;
-      }
+      position: relative;
+      top: 32px;
+      left: -22px;
+      margin:7px 0;
     }
+  }
+  .ql-toolbar.ql-snow { border: none !important;}
+  }
+  .ql-container.ql-snow { border: none !important;
+  }
+  .q1-container.q1-editor data-placeholder{
+    color:#fff;
+  }
   }
 `;

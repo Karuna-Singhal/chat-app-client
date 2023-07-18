@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
-import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import axios from "axios";
 import { sendMessageRoute, getAllMessagesRoute } from "../utils/APIRoutes";
-import { v4 as uuidv4 } from "uuid";
 
 export default function ChatContainer({ currentChat, currentUser, socket }) {
   const [messages, setMessages] = useState([]);
   const [arrivalMsg, setArrivalMsg] = useState(null);
-
   const scrollRef = useRef();
 
   useEffect(() => {
@@ -76,16 +73,16 @@ export default function ChatContainer({ currentChat, currentUser, socket }) {
         <Logout />
       </div>
       <div className="chat-messages">
-        {messages.map((message) => {
+        {messages.map((message, index) => {
           return (
-            <div ref={scrollRef} key={uuidv4}>
+            <div ref={scrollRef} key={index}>
               <div
                 className={`message ${
                   message.fromSelf ? "sended" : "recieved"
                 }`}
               >
                 <div className="content">
-                  <p>{message.message}</p>
+                  <div dangerouslySetInnerHTML={{ __html: message.message }} />
                 </div>
               </div>
             </div>
@@ -109,7 +106,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 2rem 2rem;
     .user-details {
       display: flex;
       align-items: center;
@@ -127,7 +124,7 @@ const Container = styled.div`
     }
   }
   .chat-messages {
-    padding: 1rem 2rem;
+    padding: 2.5rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
